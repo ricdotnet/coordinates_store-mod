@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "coordinates-store-mod",
+	"version": "${version}",
+	"name": "Coordinates Store mod",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/coordinates-store-mod/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"dev.ricr.CoordinatesStoreMod"
+		],
+		"client": [
+			"dev.ricr.CoordinatesStoreModClient"
+		]
+	},
+	"mixins": [
+		"coordinates-store-mod.mixins.json",
+		{
+			"config": "coordinates-store-mod.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.12",
+		"minecraft": "~1.21.5",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
