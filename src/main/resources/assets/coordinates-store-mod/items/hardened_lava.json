@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "coordinates-store-mod:item/hardened_lava"
+  }
+}

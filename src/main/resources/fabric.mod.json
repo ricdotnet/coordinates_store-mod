@@ -20,6 +20,9 @@
 		],
 		"client": [
 			"dev.ricr.CoordinatesStoreModClient"
+		],
+		"fabric-datagen": [
+			"dev.ricr.CoordinatesStoreModDataGenerator"
 		]
 	},
 	"mixins": [

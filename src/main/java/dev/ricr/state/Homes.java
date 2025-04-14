@@ -44,12 +44,23 @@ public class Homes {
         }
     }
 
-    public PlayerHomes getPlayerHomes(String playerName) {
-        if (!playerHomesMap.containsKey(playerName)) {
-            playerHomesMap.put(playerName, new PlayerHomes(playerName));
+    public PlayerHomes getPlayerHomes(String playerName, String playerUUID) {
+        PlayerHomes playerHomes;
+
+        // TODO: keep during a couple of version updates
+        if (playerHomesMap.containsKey(playerName)) {
+            playerHomes = playerHomesMap.get(playerName);
+
+            // replace with UUID and remove player name
+            playerHomesMap.put(playerUUID, playerHomes);
+            playerHomesMap.remove(playerName);
         }
 
-        return playerHomesMap.get(playerName);
+        if (!playerHomesMap.containsKey(playerUUID)) {
+            playerHomesMap.put(playerUUID, new PlayerHomes(playerName));
+        }
+
+        return playerHomesMap.get(playerUUID);
     }
 
     public void write(File homesFile) throws IOException {
