@@ -1,6 +1,5 @@
 package dev.ricr.commands;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import dev.ricr.Config;
 import dev.ricr.Constants;
@@ -25,7 +24,7 @@ public class SetHome {
                 String key = StringArgumentType.getString(commandContext, "key");
 
                 if ("all".equals(key)) {
-                    commandContext.getSource().sendError(Text.literal("That name is not allowed!"));
+                    commandContext.getSource().sendError(Text.literal("That home name is not allowed"));
                     return 0;
                 }
 
@@ -37,7 +36,7 @@ public class SetHome {
 
                 int expPoints = player.experienceLevel;
                 if (expPoints < Constants.SET_HOME_XP_COST) {
-                    commandContext.getSource().sendError(Text.literal("You don't have enough exp points to set a home! You need at  least 3 exp levels."));
+                    commandContext.getSource().sendError(Text.literal("You need at least " + Constants.SET_HOME_XP_COST + " experience to set a home"));
                     return 0;
                 }
 
@@ -47,15 +46,15 @@ public class SetHome {
                 try {
                     Homes.INSTANCE.getPlayerHomes(playerName, playerUUID).addHome(key, entityPos);
                 } catch (HomesFullException e) {
-                    commandContext.getSource().sendFeedback(() -> Text.literal("You already have 5 homes. Use §2/set_home <existing_home>§r to replace one of your existing homes."), false);
+                    commandContext.getSource().sendFeedback(() -> Text.literal("You already have 5 homes. Use §2/set_home <existing_home>§r to replace one of your existing homes"), false);
                     return 0;
                 } catch (IOException e) {
                     // ignore
                 }
 
-                commandContext.getSource().sendFeedback(() -> Text.literal("Home §4%s§r has been set. Use §2/show_home %s§r to see its coordinates.".formatted(key, key)), false);
+                commandContext.getSource().sendFeedback(() -> Text.literal("Home §4%s§r has been set. Use §2/show_home %s§r to see its coordinates".formatted(key, key)), false);
                 // Cost 3 exp points to save coordinates
-                player.addExperienceLevels(Constants.SET_HOME_XP_COST);
+                player.addExperienceLevels(-Constants.SET_HOME_XP_COST);
 
                 return 1;
             })));

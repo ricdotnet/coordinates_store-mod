@@ -29,7 +29,7 @@ public class ShowHome {
 
                 if ("all".equals(key)) {
                     if (playerHomes == null || playerHomes.homes.isEmpty()) {
-                        commandContext.getSource().sendError(Text.literal("You have no homes to show."));
+                        commandContext.getSource().sendError(Text.literal("You have no homes to show"));
                         return 0;
                     }
 
@@ -40,7 +40,7 @@ public class ShowHome {
                 try {
                     home = playerHomes.getHome(key);
                 } catch (HomeNotFoundException e) {
-                    commandContext.getSource().sendFeedback(() -> Text.literal("Home §4%s§r not found! Use §2/set_home <name>§r to set a home.".formatted(key)), false);
+                    commandContext.getSource().sendFeedback(() -> Text.literal("Home §4%s§r not found. Use §2/set_home <name>§r to set a home".formatted(key)), false);
                     return 0;
                 }
 

@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import dev.ricr.Config;
 import dev.ricr.Constants;
 import dev.ricr.state.Homes;
+import dev.ricr.utils.Utils;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -22,6 +23,11 @@ public class Teleport {
             dispatcher.register(CommandManager.literal("telep").then(CommandManager.argument("key", StringArgumentType.word()).executes(commandContext -> {
                 String key = StringArgumentType.getString(commandContext, "key");
 
+                if (!Utils.isOverworld(commandContext.getSource().getWorld())) {
+                    commandContext.getSource().sendError(Text.literal("You can only use teleport in the overworld"));
+                    return 0;
+                }
+
                 ServerPlayerEntity player = commandContext.getSource().getPlayer();
                 assert player != null;
 
@@ -29,7 +35,7 @@ public class Teleport {
                 String playerUUID = player.getUuid().toString();
 
                 if (!player.getInventory().contains(new ItemStack(Items.DIAMOND))) {
-                    commandContext.getSource().sendError(Text.literal("You have no diamonds to pay for teleportation!"));
+                    commandContext.getSource().sendError(Text.literal("You have no diamonds to pay for teleportation"));
                     return 0;
                 }
 
@@ -37,19 +43,19 @@ public class Teleport {
                 Vec3d home = playerHomes.getHome(key);
 
                 if (home == null) {
-                    commandContext.getSource().sendError(Text.literal("You cannot teleport to a home you did not set!"));
+                    commandContext.getSource().sendError(Text.literal("You cannot teleport to a home you did not set"));
                     return 0;
                 }
 
                 int holdingDiamondCount = player.getInventory().count(Items.DIAMOND);
                 if (holdingDiamondCount < Constants.TP_HOME_DIAMOND_COST) {
-                    commandContext.getSource().sendError(Text.literal("You do not have enough diamonds to pay for teleportation!"));
+                    commandContext.getSource().sendError(Text.literal("You do not have enough diamonds to pay for teleportation"));
                     return 0;
                 }
 
                 if (player instanceof ServerPlayerEntity) {
-                    Config.LOGGER().info("Teleporting to {}", playerHomes.getHome(key));
-                    player.teleport(commandContext.getSource().getWorld(), home.getX() + 0.5, home.getY() + 0.1, home.getZ() + 0.5, PositionFlag.getFlags(0), player.getYaw(), player.getPitch(), true);
+                    Config.LOGGER().info("Teleporting {} to {}", playerName, playerHomes.getHome(key));
+                    player.teleport(commandContext.getSource().getWorld(), home.getX(), home.getY() + 0.1, home.getZ(), PositionFlag.getFlags(0), player.getYaw(), player.getPitch(), true);
 
                     player.getInventory().remove((itemStack) -> itemStack.getItem().equals(Items.DIAMOND), Constants.TP_HOME_DIAMOND_COST, player.getInventory());
                 }
